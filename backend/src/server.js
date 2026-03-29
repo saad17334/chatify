@@ -10,15 +10,10 @@ import { app, server } from './lib/socket.js';
 
 dotenv.config();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://chatify-ruby-two.vercel.app"
-];
-
 app.set("trust proxy", 1);
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://chatify-ruby-two.vercel.app"],
+  origin: "https://chatify-ruby-two.vercel.app",
   credentials: true,
 }));
 
