@@ -6,9 +6,8 @@ import cors from 'cors';
 import connectDB from './lib/db.js';
 import { ENV } from "./lib/env.js";
 import cookieParser from "cookie-parser"
+import { app, server } from './lib/socket.js';
 
-
-const app = express();
 dotenv.config();
 
 const allowedOrigins = [
@@ -41,7 +40,7 @@ app.get("/", (req, res) => {
   res.send("Backend is LIVE 🚀");
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB();
 });
