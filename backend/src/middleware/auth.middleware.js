@@ -1,24 +1,40 @@
 import User from "../models/User.js";
-import { ENV } from "../lib/env.js"
-import jwt from "jsonwebtoken"
+import { ENV } from "../lib/env.js";
+import jwt from "jsonwebtoken";
 
-export const protectRoute = async (req,res,next) =>{
-  try{
-    const token = req.cookies.jwt;
-    if(!token) return res.status(401).json({message : "Unauthorized - No token provide"});
+export const protectRoute = async (req, res, next) => {
+    try {
+        // ✅ GET TOKEN FROM HEADER (NOT COOKIES)
+        const authHeader = req.headers.authorization;
 
-    const decoded = jwt.verify(token, ENV.JWT_SECRET);
-    if(!decoded) return res.status(401).json({message : "Unauthorized - Invalid Token"});
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({ message: "Unauthorized - No token provided" });
+        }
 
-    const user = await User.findById(decoded.userId).select("-password");
-    if(!user) return res.status(401).json({message : "User not found"});
+        const token = authHeader.split(" ")[1];
 
-    req.user = user;
-    next();
+        // ✅ VERIFY TOKEN
+        const decoded = jwt.verify(token, ENV.JWT_SECRET);
 
-  }catch(error)
-  {
-    console.log("Error in proctecRoute middleware", error);
-    res.status(500).json({message : "Internal Server error"});
-  }
-}
+        if (!decoded) {
+            return res.status(401).json({ message: "Unauthorized - Invalid token" });
+        }
+
+        // ✅ GET USER
+        const user = await User.findById(decoded.userId).select("-password");
+
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
+        // attach user to request
+        req.user = user;
+        req.userId = user._id;
+
+        next();
+
+    } catch (error) {
+        console.log("Error in protectRoute middleware:", error);
+        return res.status(500).json({ message: "Internal Server error" });
+    }
+};
