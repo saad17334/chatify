@@ -15,6 +15,8 @@ const allowedOrigins = [
   "https://chatify-ruby-two.vercel.app"
 ];
 
+app.set("trust proxy", 1);
+
 app.use(cors({
   origin: ["http://localhost:5173", "https://chatify-ruby-two.vercel.app"],
   credentials: true,
