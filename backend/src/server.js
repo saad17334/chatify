@@ -16,16 +16,8 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    return callback(null, false); // safer
-  },
-  credentials: true
+  origin: ["http://localhost:5173", "https://chatify-ruby-two.vercel.app"],
+  credentials: true,
 }));
 
 app.use(cookieParser());
