@@ -11,27 +11,47 @@ function ChatPage() {
   const { activeTab, selectedUser } = useChatStore();
 
   return (
-    <div className="relative w-full max-w-6xl h-[90vh] mx-auto">
-      <BorderAnimatedContainer>
-        <div className="flex w-full h-full">
-          
-          {/* LEFT SIDE */}
-          <div className="w-80 bg-slate-800/50 backdrop-blur-sm flex flex-col h-full">
-            <ProfileHeader />
-            <ActiveTabSwitch />
+    <div className="w-full h-full flex items-center justify-center px-4">
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-2">
-              {activeTab === "chats" ? <ChatsList /> : <ContactList />}
+      {/* ✅ FULL HEIGHT MOBILE */}
+      <div className="relative w-full max-w-5xl h-[92dvh] sm:h-[700px] md:h-[600px] overflow-hidden">
+        
+        <BorderAnimatedContainer>
+          <div className="flex w-full h-full overflow-hidden">
+
+            {/* LEFT */}
+            <div
+              className={`
+                w-full sm:w-80
+                bg-slate-800/50 backdrop-blur-sm
+                flex flex-col h-full border-r border-slate-700/40
+                ${selectedUser ? "hidden sm:flex" : "flex"}
+              `}
+            >
+              <ProfileHeader />
+              <ActiveTabSwitch />
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {activeTab === "chats" ? <ChatsList /> : <ContactList />}
+              </div>
             </div>
-          </div>
 
-          {/* RIGHT SIDE */}
-          <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm h-full">
-            {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
-          </div>
+            {/* RIGHT */}
+            <div
+              className={`
+                flex-1 flex flex-col
+                bg-slate-900/50 backdrop-blur-sm
+                h-full min-w-0
+                ${selectedUser ? "flex" : "hidden sm:flex"}
+              `}
+            >
+              {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
+            </div>
 
-        </div>
-      </BorderAnimatedContainer>
+          </div>
+        </BorderAnimatedContainer>
+
+      </div>
     </div>
   );
 }
